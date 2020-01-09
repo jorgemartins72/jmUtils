@@ -1,6 +1,6 @@
 import json
 
-def show(obj):
+def show(obj, **params):
 	tipo = type(obj).__name__
 
 	code = '\033['
@@ -36,17 +36,23 @@ def show(obj):
 		code += '7;'
 		code_end = code[:-1]+'m' + '\033[91;1;5m'
 
-	print(code_pre + '↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓')
 	try:
-		if tipo == 'tuple':
-			print(obj)
+		if 'inline' in params:
+			print(code_end, tipo, '→ ', '\033[0m', code_pre, obj, '\033[0m')
 		else:
-			r = json.dumps(obj, sort_keys=True, indent=4, ensure_ascii=False)
-			print( r )
+			print(code_pre + '↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓')
+			if tipo == 'tuple':
+				print(obj)
+			else:
+				print( json.dumps(obj, sort_keys=True, indent=4, ensure_ascii=False) )
+				# if 'inline' in params:
+				# 	print(obj)
+				# else:
+				print(code_end, '↑ ' + tipo, '\033[0m')
+
 	except Exception as e:
-		# print( '\033[91;1;3mErro no dumps do objeto' )
+		print(code_pre + '↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓')
 		print( obj )
-	finally:
 		print(code_end, '↑ ' + tipo, '\033[0m')
 
 def niceprint(obj, **kwargs):
